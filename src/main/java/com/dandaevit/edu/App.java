@@ -22,7 +22,9 @@ public class App {
 					?,
 					?,
 					?
-				);
+				)
+			RETURNING
+				id;
 			""";
 	public static void main(String[] args) {
 		var hashed_password = BCrypt.withDefaults().hashToString(12, "password".toCharArray());
@@ -38,6 +40,8 @@ public class App {
 
 			var rs = pstmt.executeQuery();
 
+			while (rs.next()) {
+			}
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
