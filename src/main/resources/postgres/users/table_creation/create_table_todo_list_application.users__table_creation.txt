@@ -1,0 +1,47 @@
+-- переименовать этот файл в .sql
+-- один из моих плагинов в VSCode
+-- не распознает этот синтаксис правильно
+
+-- Подключаем расширения до их использования
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Создаем таблицу
+CREATE TABLE todo_list_application.users (
+	id SERIAL PRIMARY KEY,
+	user_code TEXT UNIQUE NOT NULL,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	email VARCHAR(100) UNIQUE NOT NULL,
+	password_hash TEXT NOT NULL,
+	date_of_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Дата последнего обновления
+);
+
+-- Функция для генерации user_code
+CREATE OR REPLACE FUNCTION generate_user_code()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.user_code := CONCAT(NEW.id, '_', NEW.first_name, '_', LEFT(uuid_generate_v4()::TEXT, 8));
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Триггер для установки user_code перед вставкой
+CREATE TRIGGER set_user_code
+BEFORE INSERT ON todo_list_application.users
+FOR EACH ROW EXECUTE FUNCTION generate_user_code();
+
+-- Функция для обновления last_updated_at
+CREATE OR REPLACE FUNCTION update_last_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.last_updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Триггер для обновления last_updated_at перед обновлением записи
+CREATE TRIGGER users_last_updated_trigger
+BEFORE UPDATE ON todo_list_application.users
+FOR EACH ROW EXECUTE FUNCTION update_last_updated_at();

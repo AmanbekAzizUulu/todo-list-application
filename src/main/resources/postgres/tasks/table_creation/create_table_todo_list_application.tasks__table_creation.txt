@@ -1,0 +1,46 @@
+-- переименовать этот файл в .sql
+-- один из моих плагинов в VSCode
+-- не распознает этот синтаксис правильно
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+CREATE TABLE todo_list_application.tasks (
+    id SERIAL PRIMARY KEY,                             -- Уникальный идентификатор задачи
+    title VARCHAR(255) NOT NULL,                       -- Название задачи
+    task_code TEXT UNIQUE NOT NULL,                    -- Уникальный код задачи
+    description TEXT,                                  -- Описание задачи
+    status VARCHAR(50) CHECK (status IN ('COMPLETED', 'IN_PROGRESS', 'FAILED')), -- Статус задачи
+    priority VARCHAR(50) CHECK (priority IN ('HIGH_PRIORITY', 'NORMAL_PRIORITY', 'LOW_PRIORITY')), -- Приоритет задачи
+    rating INT CHECK (rating BETWEEN 1 AND 5),         -- Оценка задачи (от 1 до 5)
+    date_of_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Дата создания задачи
+    last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Дата последнего обновления задачи
+);
+
+CREATE OR REPLACE FUNCTION generate_task_code() RETURNS TRIGGER AS $$
+BEGIN
+    -- Генерация task_code на основе UUID и обрезка до первых 8 символов
+    NEW.task_code := substring(uuid_generate_v4()::TEXT FROM 1 FOR 8);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_last_updated_date() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.last_updated_date := CURRENT_TIMESTAMP; -- Обновляем поле last_updated_date
+    RETURN NEW;  -- Возвращаем обновленную строку
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER set_task_code
+BEFORE INSERT ON todo_list_application.tasks
+FOR EACH ROW
+EXECUTE FUNCTION generate_task_code();
+
+
+CREATE TRIGGER update_last_updated_date_trigger
+BEFORE UPDATE ON todo_list_application.tasks
+FOR EACH ROW
+EXECUTE FUNCTION update_last_updated_date();

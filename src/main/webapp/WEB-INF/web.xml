@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" version="5.0">
+
+	<display-name>ToDo List Application</display-name>
+
+	<!--  Servlet Declaration -->
+	<!-- -->
+	<!-- -->
+	<!-- -->
+	<servlet>
+		<servlet-name>TaskListServlet</servlet-name>
+		<servlet-class>com.dandaevit.edu.controllers.TaskListServlet</servlet-class>
+	</servlet>
+
+	<!-- TODO этот сервлет пока что без мэппинга-->
+	<servlet>
+		<servlet-name>AddUserServlet</servlet-name>
+		<servlet-class>com.dandaevit.edu.controllers.AddUserServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>AddTaskServlet</servlet-name>
+		<servlet-class>com.dandaevit.edu.controllers.AddTaskServlet</servlet-class>
+	</servlet>
+
+
+	<!-- JSP Declaration-->
+	<!-- -->
+	<!-- -->
+	<!-- -->
+	<servlet>
+		<servlet-name>RegistrationJSP</servlet-name>
+		<jsp-file>/WEB-INF/views/registration.jsp</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>SuccessfulRegistrationJSP</servlet-name>
+		<jsp-file>/WEB-INF/views/successful-registration.jsp</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>IndexJSP</servlet-name>
+		<jsp-file>/WEB-INF/views/index.jsp</jsp-file>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ProfileJSP</servlet-name>
+		<jsp-file>/WEB-INF/views/profile.jsp</jsp-file>
+	</servlet>
+
+
+	<!--  Servlet Mapping -->
+	<!-- -->
+	<!-- -->
+	<!-- -->
+	<servlet-mapping>
+		<servlet-name>TaskListServlet</servlet-name>
+		<url-pattern>/tasks/tasks-list-main</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>AddUserServlet</servlet-name>
+		<url-pattern>/users/register-user</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>AddTaskServlet</servlet-name>
+		<url-pattern>/users/tasks/add-task</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- JSP Mapping -->
+	<!-- -->
+	<!-- -->
+	<!-- -->
+	<servlet-mapping>
+		<servlet-name>RegistrationJSP</servlet-name>
+		<url-pattern>/users/registration</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SuccessfulRegistrationJSP</servlet-name>
+		<url-pattern>/users/registration/successful-registration</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>IndexJSP</servlet-name>
+		<url-pattern>/index</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ProfileJSP</servlet-name>
+		<url-pattern>/users/profile</url-pattern>
+	</servlet-mapping>
+
+</web-app>
