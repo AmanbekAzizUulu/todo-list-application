@@ -9,9 +9,10 @@ import lombok.With;
 
 @With
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class Task {
+	private final Integer id;
 	private final String title;			// Название.
 	private final String taskCode;
 	private final String description;	// Описание.

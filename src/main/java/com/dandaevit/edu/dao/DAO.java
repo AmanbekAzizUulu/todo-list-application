@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface DAO<T, R> {
 
     // Метод для сохранения сущности
-    void save(T entity);
+    R save(T entity);
 
     // Метод для обновления сущности
     void update(T entity);

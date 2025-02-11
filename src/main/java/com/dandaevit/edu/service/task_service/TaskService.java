@@ -7,5 +7,4 @@ import com.dandaevit.edu.service.Service;
 
 public interface TaskService extends Service<Task, Integer> {
 	List<Task> getTasksByUserId(Integer userId);
-	void addTask(Task task, Integer userId);
 }

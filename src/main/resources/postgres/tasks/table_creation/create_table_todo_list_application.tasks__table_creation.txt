@@ -2,9 +2,6 @@
 -- один из моих плагинов в VSCode
 -- не распознает этот синтаксис правильно
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-
 CREATE TABLE todo_list_application.tasks (
     id SERIAL PRIMARY KEY,                             -- Уникальный идентификатор задачи
     title VARCHAR(255) NOT NULL,                       -- Название задачи
@@ -17,30 +14,33 @@ CREATE TABLE todo_list_application.tasks (
     last_updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Дата последнего обновления задачи
 );
 
+-- Функция для генерации уникального task_code
 CREATE OR REPLACE FUNCTION generate_task_code() RETURNS TRIGGER AS $$
 BEGIN
-    -- Генерация task_code на основе UUID и обрезка до первых 8 символов
-    NEW.task_code := substring(uuid_generate_v4()::TEXT FROM 1 FOR 8);
+    NEW.task_code := 'TASK_' || LPAD(NEXTVAL('task_code_seq')::TEXT, 6, '0');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
+-- Создание последовательности для генерации уникальных номеров для task_code
+CREATE SEQUENCE task_code_seq START 1;
 
-CREATE OR REPLACE FUNCTION update_last_updated_date() RETURNS TRIGGER AS $$
-BEGIN
-    NEW.last_updated_date := CURRENT_TIMESTAMP; -- Обновляем поле last_updated_date
-    RETURN NEW;  -- Возвращаем обновленную строку
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER set_task_code
+-- Триггер для автоматической генерации task_code перед вставкой новой записи
+CREATE TRIGGER trg_generate_task_code
 BEFORE INSERT ON todo_list_application.tasks
 FOR EACH ROW
 EXECUTE FUNCTION generate_task_code();
 
+-- Функция для автоматического обновления last_updated_date
+CREATE OR REPLACE FUNCTION update_last_updated_date() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.last_updated_date := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE TRIGGER update_last_updated_date_trigger
+-- Триггер для автоматического обновления last_updated_date при обновлении записи
+CREATE TRIGGER trg_update_last_updated_date
 BEFORE UPDATE ON todo_list_application.tasks
 FOR EACH ROW
 EXECUTE FUNCTION update_last_updated_date();

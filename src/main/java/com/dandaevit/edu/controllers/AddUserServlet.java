@@ -1,9 +1,11 @@
 package com.dandaevit.edu.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import com.dandaevit.edu.dto.UserDTO;
 import com.dandaevit.edu.model.User;
-import com.dandaevit.edu.utils.jsp_utils.JSPUtils;
+import com.dandaevit.edu.service.user_service.UserServiceImplementation;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.servlet.ServletException;
@@ -12,35 +14,51 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class AddUserServlet extends HttpServlet {
+	private UserServiceImplementation userServiceImplementation = new UserServiceImplementation();
 
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO validate and add user to database
-
 		var firstName = req.getParameter("firstName");
 		var lastName = req.getParameter("lastName");
 		var email = req.getParameter("email");
+		var password = req.getParameter("password");
 
-		System.out.println(firstName);
-		System.out.println(lastName);
-		System.out.println(email);
+		var hashed_password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 
-		var user = User.builder()
-					   .id(1001)
-		               .firstName("Aibek")
-					   .lastName("Dandaev")
-					   .email("aibekdandaev@gmail.com")
-					   .password(BCrypt.withDefaults().hashToString(12, "password_1234567890".toCharArray()))
-					   .build();
+		var userDTO = UserDTO
+							.builder()
+		               		.firstName(firstName)
+					   		.lastName(lastName)
+					   		.email(email)
+					   		.password(hashed_password)
+					   		.build();
+	    req.getSession().setAttribute("userDTO", userDTO);
 
-		System.out.println(user);
+		var user = User
+						.builder()
+						.firstName(firstName)
+						.lastName(lastName)
+						.email(email)
+						.password(hashed_password)
+						.build();
 
-		req.getSession().setAttribute("user", user);
+		var userId = userServiceImplementation.save(user);
 
-		var userDTO_1 = req.getAttribute("user");
-		System.out.println(userDTO_1);
+		var user_1 = User
+						.builder()
+						.id(userId)
+						.firstName(user.getFirstName())
+						.lastName(user.getLastName())
+						.email(user.getEmail())
+						.password(user.getPassword())
+						.userCode(user.getUserCode())
+						.taskIds(user.getTaskIds() == null ? new ArrayList<Integer>() : user.getTaskIds())
+						.build();
 
-		req.getRequestDispatcher(JSPUtils.getPath("successful-registration")).forward(req, resp);
+
+		req.getSession().setAttribute("user", user_1);
+
+		resp.sendRedirect(req.getContextPath() + "/users/registration/successful-registration");
 	}
 }

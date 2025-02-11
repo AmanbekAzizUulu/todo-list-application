@@ -9,7 +9,7 @@ import lombok.With;
 
 @With
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class User {
 	private final Integer id;

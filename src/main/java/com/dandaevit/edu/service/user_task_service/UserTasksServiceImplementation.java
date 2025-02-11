@@ -1,22 +1,22 @@
-package com.dandaevit.edu.service.task_service;
+package com.dandaevit.edu.service.user_task_service;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.dandaevit.edu.dao.dao_factory.DAOFactory;
-import com.dandaevit.edu.dao.task_dao.TaskDAOImplementation;
-import com.dandaevit.edu.model.task.Task;
+import com.dandaevit.edu.dao.user_task_dao.UserTaskDAOImplementation;
+import com.dandaevit.edu.model.User;
 
-public class TaskServiceImplementation implements TaskService {
-	private TaskDAOImplementation taskDAOImplementation = DAOFactory.getTaskDAO();
+public class UserTasksServiceImplementation implements UserTaskService{
+	private UserTaskDAOImplementation userTaskDAOImplementation = DAOFactory.getUserTaskDAO();
 
 	@Override
-	public Integer save(Task entity) {
-		return taskDAOImplementation.save(entity);
+	public Integer save(User entity) {
+		return 1;
 	}
 
 	@Override
-	public void update(Task entity) {
+	public void update(User entity) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'update'");
 	}
@@ -28,21 +28,19 @@ public class TaskServiceImplementation implements TaskService {
 	}
 
 	@Override
-	public Optional<Task> findById(Integer id) {
+	public Optional<User> findById(Integer id) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'findById'");
 	}
 
 	@Override
-	public List<Task> findAll() {
+	public List<User> findAll() {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'findAll'");
 	}
 
 	@Override
-	public List<Task> getTasksByUserId(Integer userId) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getTasksByUserId'");
+	public void addTask(Integer taskId, Integer userId) {
+		userTaskDAOImplementation.addTask(taskId, userId);
 	}
-
 }

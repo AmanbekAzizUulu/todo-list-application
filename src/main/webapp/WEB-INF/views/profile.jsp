@@ -13,52 +13,102 @@
 
     <!-- Информация о пользователе -->
     <div class="profile-info">
-        <p><label>First Name:</label> ${sessionScope.user.firstName()}</p>
-        <p><label>Last Name:</label> ${sessionScope.user.lastName()}</p>
-        <p><label>Email:</label> ${sessionScope.user.email()}</p>
+        <p><label>First Name:</label> ${sessionScope.userDTO.firstName()}</p>
+        <p><label>Last Name:</label> ${sessionScope.userDTO.lastName()}</p>
+        <p><label>Email:</label> ${sessionScope.userDTO.email()}</p>
     </div>
 
 
 	<!-- Список задач пользователя -->
-    <div class="tasks-list">
-        <h2>Your Tasks</h2>
-        <c:choose>
-            <c:when test="${empty tasks}">
-                <p>You have no tasks yet.</p>
+	<div class="tasks-list">
+	    <h2>Your Tasks</h2>
 
-				<!-- Кнопка для добавления задачи -->
-    			<div class="add-task">
-        			<a href="${pageContext.request.contextPath}/users/tasks/add-task">
-            			<button>Add Task</button>
-        			</a>
-    			</div>
-            </c:when>
+	<!-- Список задач пользователя -->
+	<div class="tasks-list">
+	    <c:choose>
+	        <c:when test="${empty tasks}">
+	            <p>You have no task yet.</p>
 
-            <c:otherwise>
-                <table>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                        <th>Rating</th>
-                    </tr>
-                    <c:forEach items="${tasks}" var="task">
-                        <tr>
-                            <td>${task.taskId}</td>
-                            <td>${task.title}</td>
-                            <td>${task.status}</td>
-                            <td>${task.priority}</td>
-                            <td>
-                                <c:if test="${task.status == 'COMPLETED'}">
-                                    ${task.rating}
-                                </c:if>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-            </c:otherwise>
-        </c:choose>
-    </div>
+	            <!-- Кнопка для добавления задачи -->
+	            <div class="add-task">
+	                <a href="${pageContext.request.contextPath}/users/tasks/add-task">
+	                    <button>Add Task</button>
+	                </a>
+	            </div>
+	        </c:when>
+
+	        <c:otherwise>
+	            <table border="1">
+	                <tr>
+	                    <th>Title</th>
+	                    <th>Description</th>
+	                    <th>Priority</th>
+	                    <th>Status</th>
+						<th>Rating</th>
+	                </tr>
+	                <c:forEach var="task" items="${tasks}">
+	                    <tr>
+	                        <td>${task.title}</td>
+	                        <td>${task.description}</td>
+
+
+	                        <!-- Выпадающий список для приоритета -->
+	                        <td>
+								<a href="${pageContext.request.contextPath}/#"><!-- SetTaskPriorityServlet-->
+	                   	 			<button>Set Priority</button>
+	                			</a>
+	                            <select>
+	                                <option>LOW</option>
+	                                <option>MIDDLE</option>
+	                                <option>HIGH</option>
+	                            </select>
+								<br>
+								<br>
+	                        </td>
+
+	                        <!-- Кнопка и выпадающий список статуса -->
+	                        <td>
+	                            <a href="${pageContext.request.contextPath}/#"><!-- SetTaskStatusServlet-->
+	                   	 			<button>Set Status</button>
+	                			</a>
+	                            <select>
+	                                <option>COMPLETED</option>
+	                                <option>IN PROGRESS</option>
+	                                <option>FAILED</option>
+	                            </select>
+								<br>
+								<br>
+	                        </td>
+
+							<!-- Кнопка для оценки -->
+	                        <td>
+	                            <a href="${pageContext.request.contextPath}/#"><!-- SetTaskRateServlet-->
+	                   	 			<button>Set Rate</button>
+	                			</a>
+	                            <select>
+	                                <option>1</option>
+	                                <option>2</option>
+	                                <option>3</option>
+	                                <option>4</option>
+	                                <option>5</option>
+	                            </select>
+								<br>
+								<br>
+	                        </td>
+	                    </tr>
+	                </c:forEach>
+	            </table>
+				<br>
+				<br>
+
+	            <!-- Кнопка для добавления задачи -->
+	            <div class="add-task">
+	                <a href="${pageContext.request.contextPath}/users/tasks/add-task">
+                    <button>Add Task</button>
+	                </a>
+	            </div>
+	        </c:otherwise>
+	    </c:choose>
+	</div>
 </body>
 </html>

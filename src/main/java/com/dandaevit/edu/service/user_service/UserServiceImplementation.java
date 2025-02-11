@@ -3,14 +3,16 @@ package com.dandaevit.edu.service.user_service;
 import java.util.List;
 import java.util.Optional;
 
+import com.dandaevit.edu.dao.dao_factory.DAOFactory;
+import com.dandaevit.edu.dao.user_dao.UserDAOImplementation;
 import com.dandaevit.edu.model.User;
 
 public class UserServiceImplementation implements UserService{
+	private UserDAOImplementation userDAOImplementation = DAOFactory.getUserDAO();
 
 	@Override
-	public void save(User entity) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'save'");
+	public Integer save(User user) {
+		return userDAOImplementation.save(user);
 	}
 
 	@Override

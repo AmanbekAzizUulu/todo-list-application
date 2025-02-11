@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface Service<T, R> {
 
-    void save(T entity);
+    R save(T entity);
     void update(T entity);
     void delete(R id);
 
